@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Settings, Globe, Mic, Shield, BookOpen, ExternalLink } from 'lucide-react'
 import axios from 'axios'
+import { API_BASE } from '../api'
 
 const LANG_OPTIONS = [
   { code: 'en', label: 'English', flag: '🇬🇧', desc: 'en-US voice (American English)' },
@@ -22,7 +23,7 @@ export default function SettingsPage() {
   const [preferredLang, setPreferredLang] = useState('en')
 
   useEffect(() => {
-    axios.get('/api/model/status').then(r => setModelStatus(r.data)).catch(() => {})
+    axios.get(`${API_BASE}/api/model/status`).then(r => setModelStatus(r.data)).catch(() => {})
   }, [])
 
   const testVoice = (text, code) => {
@@ -151,7 +152,7 @@ export default function SettingsPage() {
             ))}
           </div>
           <a
-            href="http://localhost:8000/docs"
+            href={`${API_BASE}/docs`}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-4 inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors"
