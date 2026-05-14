@@ -1,7 +1,8 @@
 import { useRef, useEffect, useState, useCallback } from 'react'
 import axios from 'axios'
+import { API_BASE } from '../api'
 
-const API_URL = '/api/predict'
+const API_URL = `${API_BASE}/api/predict`
 
 export default function WebcamCapture({ onPrediction, isRunning }) {
   const videoRef = useRef(null)
