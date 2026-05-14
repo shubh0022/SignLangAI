@@ -6,6 +6,7 @@ import {
 } from 'recharts'
 import { TrendingUp, Cpu, BookOpen, Activity } from 'lucide-react'
 import axios from 'axios'
+import { API_BASE } from '../api'
 
 const GESTURE_CATEGORIES = {
   Emergency: ['Help', 'Emergency', 'Pain', 'Doctor', 'Medicine'],
@@ -40,8 +41,8 @@ export default function Dashboard() {
   const [logs, setLogs] = useState([])
 
   useEffect(() => {
-    axios.get('/api/model/status').then(r => setModelStatus(r.data)).catch(() => {})
-    axios.get('/api/model/history').then(r => {
+    axios.get(`${API_BASE}/api/model/status`).then(r => setModelStatus(r.data)).catch(() => {})
+    axios.get(`${API_BASE}/api/model/history`).then(r => {
       const h = r.data
       const data = h.accuracy?.map((acc, i) => ({
         epoch: i + 1,
@@ -53,7 +54,7 @@ export default function Dashboard() {
       setChartData(data)
       setHistory(data)
     }).catch(() => {})
-    axios.get('/api/logs?limit=100').then(r => setLogs(r.data.logs || [])).catch(() => {})
+    axios.get(`${API_BASE}/api/logs?limit=100`).then(r => setLogs(r.data.logs || [])).catch(() => {})
   }, [])
 
   // Build category frequency from logs
