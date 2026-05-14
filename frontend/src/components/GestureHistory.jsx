@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { History, Download, Trash2 } from 'lucide-react'
 import axios from 'axios'
+import { API_BASE } from '../api'
 
 export default function GestureHistory({ history, onClear }) {
   const exportLogs = () => {
@@ -12,7 +13,7 @@ export default function GestureHistory({ history, onClear }) {
   }
 
   const clearRemote = async () => {
-    try { await axios.delete('/api/logs') } catch (_) {}
+    try { await axios.delete(`${API_BASE}/api/logs`) } catch (_) {}
     onClear()
   }
 
