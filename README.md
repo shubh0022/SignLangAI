@@ -48,6 +48,7 @@ Google Colab	Model training
 
 
 🏗 System Architecture
+
 Webcam Input
       ↓
 OpenCV Frame Capture
