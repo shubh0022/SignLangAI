@@ -8,7 +8,6 @@ AI-Powered Real-Time Hand Gesture & Sign Language Recognition System Using Deep 
 SignLangAI is an AI-powered real-time hand gesture and sign language recognition system designed to improve communication accessibility for speech-impaired and hearing-impaired individuals.
 
 The system uses:
-
 Computer Vision
 Deep Learning
 MediaPipe Hand Tracking
