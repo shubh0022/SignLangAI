@@ -180,7 +180,7 @@ into a single intelligent platform.
 Yadav Shubham Jangbahadur
 PU-CDOE — One Year Diploma in Neural Network(2522759X5XX28)
 Parul University, Vadodara
-
+LINK OF PROJECT   https://sign-lang-ai-qk62.vercel.app/
 📄 License
 
 This project is developed for academic and research purposes.
