@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion'
 import { NavLink } from 'react-router-dom'
-import { Activity, Mail, Lock, ArrowRight, User } from 'lucide-react'
+import { Mail, Lock, ArrowRight, User } from 'lucide-react'
+import Logo from '../components/Logo'
+
 
 export default function LoginPage() {
   return (
@@ -16,8 +18,8 @@ export default function LoginPage() {
         className="glass-strong p-8 md:p-10 rounded-3xl border border-white/10 w-full max-w-md relative z-10 shadow-2xl"
       >
         <div className="text-center mb-8">
-          <div className="w-14 h-14 mx-auto bg-gradient-to-br from-cyan-400 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30 mb-6">
-            <Activity size={28} className="text-white" />
+          <div className="flex items-center justify-center mb-6">
+            <Logo size={64} showText={false} />
           </div>
           <h2 className="text-3xl font-black mb-2">Welcome Back</h2>
           <p className="text-gray-400 text-sm">Sign in to continue to SignLangAI</p>

@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion'
 import { NavLink } from 'react-router-dom'
 import { Camera, BarChart3, Languages, Mic, Shield, Zap, ArrowRight, Users, Star, Globe } from 'lucide-react'
+import Logo from '../components/Logo'
+
 
 const FEATURES = [
   {
@@ -73,6 +75,16 @@ export default function LandingPage() {
 
       {/* ── HERO ── */}
       <section className="relative min-h-screen flex flex-col items-center justify-center text-center pt-24 pb-16 px-6">
+        {/* Branding Icon */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.05, duration: 0.5 }}
+          className="mb-6 filter drop-shadow-[0_0_25px_rgba(34,211,238,0.25)]"
+        >
+          <Logo size={80} showText={false} />
+        </motion.div>
+
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -270,11 +282,43 @@ export default function LandingPage() {
           </motion.div>
         </div>
       </section>
-
       {/* Footer */}
-      <footer className="text-center py-12 text-gray-600 text-sm border-t border-white/5">
-        <p>SignLangAI © 2026 — AI-Powered Accessibility Technology</p>
-        <p className="mt-1">Built with ❤️ for the hearing-impaired community</p>
+      <footer className="py-16 px-6 border-t border-white/5 bg-black/10 dark:bg-black/20 mt-12">
+        <div className="max-w-6xl mx-auto flex flex-col items-center justify-between gap-10">
+          
+          {/* Top section: Brand & Statement */}
+          <div className="w-full flex flex-col md:flex-row items-center md:items-start justify-between gap-8 pb-10 border-b border-white/5">
+            <div className="flex flex-col items-center md:items-start gap-4">
+              <Logo size={42} showText={true} />
+              <p className="text-gray-400 text-sm max-w-md text-center md:text-left leading-relaxed font-normal">
+                Designing technology to make communication universal. SignLangAI empowers human connection by translating sign language gestures into real-time speech and text.
+              </p>
+            </div>
+            <div className="flex flex-col items-center md:items-end gap-2 text-center md:text-right">
+              <span className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Accessibility Value</span>
+              <p className="text-gray-400 text-sm max-w-xs leading-relaxed">
+                Accessibility is a human right. Built to serve and connect hearing and speech-impaired communities globally.
+              </p>
+            </div>
+          </div>
+
+          {/* Bottom section: Copyright and Links */}
+          <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500 font-medium">
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+              <p>Copyright © 2026 SignLangAI Inc. All rights reserved.</p>
+              <span className="hidden md:inline text-gray-700">|</span>
+              <div className="flex gap-4">
+                <a href="#" className="hover:text-cyan-400 transition-colors">Privacy Policy</a>
+                <a href="#" className="hover:text-cyan-400 transition-colors">Terms of Use</a>
+                <a href="#" className="hover:text-cyan-400 transition-colors">Legal & Regulatory</a>
+              </div>
+            </div>
+            <div className="text-gray-600 dark:text-gray-500">
+              Designed in California · Built for everyone
+            </div>
+          </div>
+
+        </div>
       </footer>
     </div>
   )

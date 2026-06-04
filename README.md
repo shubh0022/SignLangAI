@@ -1,53 +1,25 @@
-SignLangAI
-AI-Powered Real-Time Hand Gesture & Sign Language Recognition System Using Deep Learning
+# SignLangAI - AI-Powered Sign Language Platform
 
-<img width="1822" height="1202" alt="image" src="https://github.com/user-attachments/assets/84fb51ed-9e7f-49d1-8b06-569b3d334a7f" />
-
-📌 Overview
-
-SignLangAI is an AI-powered real-time hand gesture and sign language recognition system designed to improve communication accessibility for speech-impaired and hearing-impaired individuals.
-
-The system uses:
-Computer Vision
-Deep Learning
-MediaPipe Hand Tracking
-CNN-based Gesture Classification
-Multilingual Translation
-
-to recognize hand gestures through a webcam and translate them into:
-
-English
-Hindi
-Gujarati
+## 🚀 Overview
+**SignLangAI** is a production-ready, full-stack platform leveraging Deep Learning and Computer Vision for real-time hand gesture and sign language recognition. The system accurately tracks hand landmarks using MediaPipe, classifies gestures via a CNN (TensorFlow/Keras), and translates them into multiple languages (English, Hindi, Gujarati) with live confidence scoring.
 
 The project focuses on creating a practical, touchless, and accessibility-oriented communication platform using Artificial Intelligence.
 
-🚀 Key Features
-🎥 Real-time webcam gesture detection
-✋ Hand landmark tracking using MediaPipe
-🧠 CNN-based gesture classification
-🌐 Multilingual translation support
-🇮🇳 English, Hindi, and Gujarati output
-⚡ Real-time prediction with confidence score
-📊 Accuracy and performance visualization
-🖥 Modern AI-inspired user interface
-🔊 Future-ready voice assistant support
-♿ Accessibility-focused system design
-🧠 Technologies Used
-Technology	Purpose
-Python	Core programming
-TensorFlow / Keras	Deep learning
-OpenCV	Image processing
-MediaPipe	Hand landmark detection
-NumPy	Numerical computation
-Pandas	Data handling
-Matplotlib	Visualization
-Flask / FastAPI	Backend integration
-Google Colab	Model training
+## ✨ Core Features
+- **Real-Time Webcam Detection**: 30+ FPS real-time webcam gesture detection.
+- **Advanced AI/ML**: 21-point hand landmark tracking (MediaPipe) & CNN-based gesture classification (TensorFlow/Keras).
+- **Multilingual Support**: Live translations in English, Hindi (हिंदी), and Gujarati (ગુજરાતી).
+- **Accessibility UI**: Dark/Light mode, voice output assistant support, translation history, and a modern dashboard.
+- **Live Metrics**: Real-time prediction confidence scoring and visual accuracy graphs.
 
+## 🛠 Tech Stack
+- **Frontend**: React.js, Tailwind CSS v4, Framer Motion, Vite
+- **Backend**: FastAPI, WebSockets
+- **AI/ML**: Python, TensorFlow, Keras, OpenCV, MediaPipe
+- **Database**: MongoDB (via Motor) / Optional MySQL (via SQLAlchemy)
 
-🏗 System Architecture
-
+## 🏗 System Architecture
+```text
 Webcam Input
       ↓
 OpenCV Frame Capture
@@ -63,135 +35,89 @@ Gesture Prediction
 Translation Engine
       ↓
 English / Hindi / Gujarati Output
+```
 
-
-📂 Project Structure
+## 📂 Project Structure
+```text
 SignLangAI/
-│
-├── dataset/
-├── models/
-├── notebooks/
-├── screenshots/
-├── static/
-├── templates/
-├── app.py
-├── train.py
-├── predict.py
-├── requirements.txt
-├── README.md
-└── assets/
+├── API/                 # Postman collections, Swagger specs, or external API configs
+├── assets/              # Global project assets (logos, branding)
+├── backend/             # FastAPI backend server
+│   ├── app/
+│   │   ├── api/         # API routes
+│   │   ├── models/      # Database models & ML architecture
+│   │   ├── services/    # Business logic & Translation handlers
+│   │   └── main.py      # FastAPI application entry point
+│   ├── train.py         # Model training pipeline
+│   └── requirements.txt # Python dependencies
+├── dataset/             # Raw & processed training data (video/images)
+├── frontend/            # React.js frontend application
+│   ├── public/
+│   ├── src/
+│   │   ├── components/  # Reusable UI components
+│   │   ├── contexts/    # React context (Theme, Auth)
+│   │   ├── hooks/       # Custom React hooks
+│   │   ├── pages/       # Dashboard & Application pages
+│   │   └── App.jsx      # Main application router
+│   ├── package.json     # Node.js dependencies
+│   └── vite.config.js   # Vite bundler configuration
+├── model/               # Saved trained `.keras` or `.h5` model files
+├── screenshot/          # Application screenshots for documentation
+├── README.md            # Project documentation
+└── requirements.txt     # Root reference for dependencies
+```
 
+## ⚙️ Setup Instructions
 
-📊 Dataset Information
-
-The model was trained using multiple gesture datasets:
-
-ASL Alphabet Dataset
-LeapGestRecog Dataset
-Indian Sign Language Dataset
-Custom Webcam Gesture Dataset
-
-The datasets include:
-
-Static gestures
-Hand landmarks
-Real-time gesture samples
-Accessibility-focused sign inputs
-🧪 Model Training
-
-The gesture recognition model uses a Convolutional Neural Network (CNN) for image classification.
-
-Training Workflow
-Dataset Collection
-        ↓
-Image Preprocessing
-        ↓
-Landmark Extraction
-        ↓
-CNN Training
-        ↓
-Validation
-        ↓
-Gesture Prediction
-Training Configuration
-Parameter	Value
-Epochs	30
-Batch Size	32
-Optimizer	Adam
-Accuracy	~96%
-
-
-
-🌍 Supported Languages
-Language	Status
-English	✅ Supported
-Hindi	✅ Supported
-Gujarati	✅ Supported
-⚙ Installation
-Clone Repository
-git clone https://github.com/shubh0022/SignLangAI.git
-Navigate to Project Folder
-cd SignLangAI
-Install Dependencies
+### 1. Backend Setup
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 pip install -r requirements.txt
-Run Application
-python app.py
-📈 Performance
-Metric	Result
-Accuracy	96%
-Precision	95%
-FPS	24
-Response Time	<1 sec
+# Start the FastAPI server
+uvicorn app.main:app --reload
+```
 
-The trained model performed well during real-time testing and maintained stable gesture recognition under normal lighting conditions.
+### 2. Frontend Setup
+```bash
+cd frontend
+npm install
+# Start the Vite development server
+npm run dev
+```
 
-💡 Real-World Applications
-Accessibility communication systems
-Smart classrooms
-Healthcare support systems
-AI-powered translation platforms
-Touchless smart interfaces
-Public assistance kiosks
-🔮 Future Scope
+### 3. Training the AI Model
+To generate synthetic data or train on a custom dataset:
+```bash
+cd backend
+python train.py
+```
+*Note: The script outputs the trained model to `backend/app/models/gesture_model.keras`.*
 
-Future improvements may include:
+## 🔮 Future Roadmap
+- Integration of custom user authentication.
+- Continuous model learning from user feedback.
+- Deployment via Docker, Vercel (Frontend), and AWS/GCP (Backend).
+- Mobile application support and smart glasses integration.
+- Dynamic sentence recognition (continuous signing stream).
 
-📱 Mobile application support
-🥽 Smart glasses integration
-🔊 Voice assistant support
-🌐 Cloud deployment
-🧠 Dynamic sentence recognition
-🕶 AR/VR interaction systems
-📚 Research Contribution
+## 🔗 Project Link
+- **Live Vercel Application**: [https://sign-lang-ai-qk62.vercel.app/](https://sign-lang-ai-qk62.vercel.app/)
 
-This project focuses not only on gesture recognition accuracy but also on practical accessibility support and multilingual communication.
+## 👨‍💻 Author
+**Yadav Shubham Jangbahadur**
+- PU-CDOE — One Year Diploma in Neural Network (2522759X5XX28)
+- Parul University, Vadodara
 
-The system attempts to reduce communication barriers by combining:
-
-Deep Learning
-Computer Vision
-Real-time AI interaction
-Regional language translation
-
-into a single intelligent platform.
-
-👨‍💻 Author
-
-Yadav Shubham Jangbahadur
-PU-CDOE — One Year Diploma in Neural Network(2522759X5XX28)
-Parul University, Vadodara
-LINK OF PROJECT   https://sign-lang-ai-qk62.vercel.app/
-📄 License
-
+## 📄 License
 This project is developed for academic and research purposes.
 
-⭐ Acknowledgement
-
+## ⭐ Acknowledgement
 Special thanks to:
-
-TensorFlow Community
-OpenCV Developers
-MediaPipe Team
-Open-source AI research contributors
+- TensorFlow Community
+- OpenCV Developers
+- MediaPipe Team
+- Open-source AI research contributors
 
 for providing valuable frameworks and resources that supported the development of this project.

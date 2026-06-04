@@ -11,6 +11,8 @@ import SignupPage from './pages/SignupPage'
 import LiveClock from './components/LiveClock'
 import { ThemeProvider, useTheme } from './contexts/ThemeContext'
 import { Moon, Sun, UserCircle } from 'lucide-react'
+import Logo from './components/Logo'
+
 
 const NAV_ITEMS = [
   { to: '/',         icon: <Zap size={18} />,      label: 'Home',      exact: true },
@@ -28,11 +30,8 @@ function Navbar() {
     <nav className={`fixed top-0 left-0 right-0 z-50 ${isHome ? '' : 'glass border-b border-white/5'}`}>
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <NavLink to="/" className="flex items-center gap-3 group">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-            <Activity size={18} className="text-white dark:text-white" />
-          </div>
-          <span className="text-lg font-bold text-gradient-cyan tracking-tight">SignLangAI</span>
+        <NavLink to="/" className="flex items-center group">
+          <Logo size={34} showText={true} />
         </NavLink>
 
         {/* Live Clock (Hidden on very small screens) */}
