@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { Play, Square, AlertCircle } from 'lucide-react'
+import { Play, Square, AlertCircle, Sparkles } from 'lucide-react'
 import WebcamCapture from '../components/WebcamCapture'
 import TranslationPanel from '../components/TranslationPanel'
 import GestureHistory from '../components/GestureHistory'
@@ -31,29 +31,32 @@ export default function LiveDetection() {
   }
 
   return (
-    <div className="pt-20 min-h-screen px-4 md:px-8 py-8 max-w-[1600px] mx-auto">
+    <div className="pt-24 min-h-screen px-4 md:px-8 py-8 max-w-[1600px] mx-auto bg-[#0C0D12] text-white">
       {/* Page header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-black">
-            Live <span className="text-gradient-cyan">Gesture Detection</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-sky-500/10 border border-sky-500/20 text-sky-300 mb-3">
+            <Sparkles size={12} /> NEURAL VISION INTERFACE
+          </div>
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+            Real-Time <span className="text-gradient-cyan">Gesture Recognition</span>
           </h1>
-          <p className="text-gray-400 mt-1">Show your hand to the camera — AI detects and translates instantly</p>
+          <p className="text-slate-400 mt-1 text-sm font-medium">Position your hand in frame to execute instant multilingual synthesis</p>
         </div>
 
         <div className="flex gap-3">
           <motion.button
             whileTap={{ scale: 0.96 }}
             onClick={toggleRun}
-            className={`flex items-center gap-2.5 px-7 py-3 rounded-xl font-semibold text-white text-sm transition-all shadow-lg ${
+            className={`flex items-center gap-2.5 px-8 py-3.5 rounded-xl font-bold text-sm transition-all shadow-lg ${
               isRunning
-                ? 'bg-red-500/20 border border-red-500/40 text-red-400 hover:bg-red-500/30 shadow-red-500/10'
-                : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:opacity-90 shadow-blue-500/30'
+                ? 'border border-rose-500/40 text-rose-400 bg-rose-500/10 hover:bg-rose-500/20'
+                : 'bg-white text-slate-900 hover:bg-slate-100 shadow-[0_4px_25px_rgba(255,255,255,0.15)]'
             }`}
           >
             {isRunning
-              ? <><Square size={16} /> Stop Detection</>
-              : <><Play size={16} /> Start Detection</>
+              ? <><Square size={16} fill="currentColor" /> Terminate Session</>
+              : <><Play size={16} fill="currentColor" /> Initialize Vision</>
             }
           </motion.button>
         </div>
@@ -64,11 +67,11 @@ export default function LiveDetection() {
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-3 glass border border-amber-500/20 rounded-xl p-4 mb-6 text-sm text-amber-300"
+          className="flex items-center gap-3 glass-strong border border-white/10 rounded-2xl p-4 mb-8 text-sm text-slate-300 bg-[#13151F]"
         >
-          <AlertCircle size={16} className="text-amber-400 shrink-0" />
+          <AlertCircle size={18} className="text-sky-400 shrink-0" />
           <span>
-            <strong>Allow camera access</strong> when the browser asks. The model loads from CDN — first detection may take a few seconds.
+            <strong>Camera Authorization</strong>: Grant camera permissions when prompted. Landmark tracking executes locally via WASM for zero latency.
           </span>
         </motion.div>
       )}
@@ -82,13 +85,13 @@ export default function LiveDetection() {
           {/* Quick stats row */}
           <div className="grid grid-cols-3 gap-4">
             {[
-              { label: 'Session Logs', value: history.length, color: 'text-cyan-400' },
-              { label: 'Confidence', value: `${((prediction.confidence || 0) * 100).toFixed(0)}%`, color: 'text-green-400' },
-              { label: 'Active Language', value: activeLang.toUpperCase(), color: 'text-purple-400' },
+              { label: 'Session Logs', value: history.length },
+              { label: 'Model Confidence', value: `${((prediction.confidence || 0) * 100).toFixed(0)}%` },
+              { label: 'Active Language', value: activeLang.toUpperCase() },
             ].map((s, i) => (
-              <div key={i} className="glass rounded-xl p-4 border border-white/5 text-center">
-                <p className="text-xs text-gray-500 mb-1">{s.label}</p>
-                <p className={`text-2xl font-black ${s.color}`}>{s.value}</p>
+              <div key={i} className="glass-strong rounded-2xl p-4 border border-white/10 text-center bg-[#13151F]">
+                <p className="text-xs text-slate-400 font-medium mb-1">{s.label}</p>
+                <p className="text-2xl font-black text-white">{s.value}</p>
               </div>
             ))}
           </div>
@@ -114,3 +117,5 @@ export default function LiveDetection() {
     </div>
   )
 }
+
+

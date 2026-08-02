@@ -14,28 +14,34 @@ export default function TranslationPanel({ prediction, activeLang, setActiveLang
 
   const speak = (text, langCode) => {
     if (!voiceEnabled || !text || text === 'Waiting...' || !window.speechSynthesis) return
-    window.speechSynthesis.cancel()
-    const utter = new SpeechSynthesisUtterance(text)
-    utter.lang = langCode
-    utter.rate = 0.9
-    utter.onstart = () => setSpeaking(true)
-    utter.onend = () => setSpeaking(false)
-    window.speechSynthesis.speak(utter)
+    try {
+      window.speechSynthesis.cancel()
+      const utter = new SpeechSynthesisUtterance(text)
+      utter.lang = langCode
+      utter.rate = 0.9
+      utter.onstart = () => setSpeaking(true)
+      utter.onend = () => setSpeaking(false)
+      utter.onerror = () => setSpeaking(false)
+      window.speechSynthesis.speak(utter)
+    } catch (_) {
+      setSpeaking(false)
+    }
   }
+
 
   const hasResult = prediction?.gesture && prediction.gesture !== 'Waiting...'
 
   return (
-    <div className="glass-strong rounded-2xl border border-white/5 overflow-hidden">
+    <div className="glass-strong rounded-2xl border border-white/10 overflow-hidden bg-[#13151F] text-white shadow-xl">
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
-        <div className="flex items-center gap-2 text-sm font-semibold text-gray-300">
-          <Languages size={16} className="text-cyan-400" />
-          Translation Output
+      <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-white/5">
+        <div className="flex items-center gap-2 text-sm font-bold text-white">
+          <Languages size={18} className="text-sky-400" />
+          Neural Translation Matrix
         </div>
         <button
           onClick={() => setVoiceEnabled(!voiceEnabled)}
-          className={`p-2 rounded-lg transition-all ${voiceEnabled ? 'text-cyan-400 bg-cyan-400/10' : 'text-gray-600 hover:text-gray-400'}`}
+          className={`p-2 rounded-xl transition-all ${voiceEnabled ? 'text-sky-300 bg-sky-500/10 border border-sky-500/30' : 'text-slate-500 hover:text-white'}`}
           title={voiceEnabled ? 'Mute voice' : 'Enable voice'}
         >
           {voiceEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
@@ -43,15 +49,15 @@ export default function TranslationPanel({ prediction, activeLang, setActiveLang
       </div>
 
       {/* Language tabs */}
-      <div className="flex border-b border-white/5">
+      <div className="flex border-b border-white/10 bg-black/20">
         {Object.entries(LANG_META).map(([code, meta]) => (
           <button
             key={code}
             onClick={() => setActiveLang(code)}
-            className={`flex-1 py-3 text-sm font-medium transition-all ${
+            className={`flex-1 py-3 text-xs font-semibold transition-all ${
               activeLang === code
-                ? 'text-cyan-400 border-b-2 border-cyan-400 bg-cyan-400/5'
-                : 'text-gray-500 hover:text-gray-300'
+                ? 'text-white border-b-2 border-sky-400 bg-white/5 font-bold'
+                : 'text-slate-400 hover:text-white'
             }`}
           >
             {meta.flag} {meta.label}
@@ -63,16 +69,16 @@ export default function TranslationPanel({ prediction, activeLang, setActiveLang
       <div className="p-6">
         {/* Gesture name */}
         <div className="mb-4">
-          <p className="text-xs text-gray-500 mb-1">Detected Gesture</p>
+          <p className="text-xs text-slate-400 mb-1 uppercase tracking-wider font-semibold">Detected Gesture</p>
           <AnimatePresence mode="wait">
             <motion.div
               key={prediction?.gesture}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              className="text-2xl font-black text-gradient-cyan"
+              className="text-3xl font-extrabold text-white"
             >
-              {prediction?.gesture || 'Waiting...'}
+              {prediction?.gesture || 'Waiting for hand...'}
             </motion.div>
           </AnimatePresence>
         </div>
@@ -80,11 +86,11 @@ export default function TranslationPanel({ prediction, activeLang, setActiveLang
         {/* Confidence bar */}
         {hasResult && (
           <div className="mb-6">
-            <div className="flex justify-between text-xs text-gray-500 mb-1.5">
-              <span>Confidence</span>
-              <span className="text-green-400 font-mono">{((prediction?.confidence || 0) * 100).toFixed(1)}%</span>
+            <div className="flex justify-between text-xs text-slate-400 mb-1.5 font-mono">
+              <span>Model Confidence</span>
+              <span className="text-sky-400 font-bold">{((prediction?.confidence || 0) * 100).toFixed(1)}%</span>
             </div>
-            <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+            <div className="h-2 bg-white/5 rounded-full overflow-hidden border border-white/10">
               <motion.div
                 className="confidence-bar h-full"
                 initial={{ width: 0 }}
@@ -107,20 +113,20 @@ export default function TranslationPanel({ prediction, activeLang, setActiveLang
                 onClick={() => speak(text, meta.code)}
                 className={`flex items-center justify-between p-4 rounded-xl transition-all cursor-pointer border ${
                   isActive
-                    ? 'bg-cyan-400/10 border-cyan-400/30 shadow-lg shadow-cyan-400/5'
-                    : 'bg-white/3 border-white/5 hover:border-white/10'
+                    ? 'bg-gradient-to-r from-sky-500/10 to-indigo-500/10 border-sky-400/40 shadow-lg'
+                    : 'bg-white/5 border-white/5 hover:border-white/15'
                 }`}
               >
                 <div>
-                  <div className="text-xs text-gray-500 mb-0.5">{meta.flag} {meta.label}</div>
-                  <div className={`text-lg font-bold ${isActive ? 'text-white' : 'text-gray-300'} ${code !== 'en' ? 'lang-' + code : ''}`}>
+                  <div className="text-xs text-slate-400 mb-0.5">{meta.flag} {meta.label}</div>
+                  <div className={`text-xl font-bold ${isActive ? 'text-white' : 'text-slate-300'} ${code !== 'en' ? 'lang-' + code : ''}`}>
                     {text}
                   </div>
                 </div>
                 {voiceEnabled && (
                   <Volume2
-                    size={16}
-                    className={`${isActive ? 'text-cyan-400' : 'text-gray-600'} ${speaking && isActive ? 'animate-pulse' : ''}`}
+                    size={18}
+                    className={`${isActive ? 'text-sky-400' : 'text-slate-500'} ${speaking && isActive ? 'animate-pulse' : ''}`}
                   />
                 )}
               </motion.div>
@@ -129,11 +135,13 @@ export default function TranslationPanel({ prediction, activeLang, setActiveLang
         </div>
 
         {hasResult && (
-          <p className="text-xs text-gray-600 text-center mt-4">
-            Click a language card to hear the translation
+          <p className="text-xs text-slate-500 text-center mt-4 font-mono">
+            Click any translation card to synthesize speech
           </p>
         )}
       </div>
     </div>
   )
 }
+
+

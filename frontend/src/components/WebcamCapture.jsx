@@ -14,6 +14,8 @@ export default function WebcamCapture({ onPrediction, isRunning }) {
   const [handsDetected, setHandsDetected] = useState(0)
   const framesRef = useRef(0)
   const lastTimeRef = useRef(performance.now())
+  const isProcessingRef = useRef(false)
+  const lastRequestTimeRef = useRef(0)
 
   const onResults = useCallback(async (results) => {
     const video = videoRef.current
@@ -36,38 +38,48 @@ export default function WebcamCapture({ onPrediction, isRunning }) {
     const count = results.multiHandLandmarks?.length || 0
     setHandsDetected(count)
 
+    const now = performance.now()
+
     if (count > 0) {
       for (const landmarks of results.multiHandLandmarks) {
-        // Draw connections
+        // Draw connections in 2026 Azure & Crisp White
         if (window.drawConnectors && window.HAND_CONNECTIONS) {
           ctx.save()
           ctx.translate(W, 0)
           ctx.scale(-1, 1)
           window.drawConnectors(ctx, landmarks, window.HAND_CONNECTIONS, {
-            color: 'rgba(34,211,238,0.7)',
-            lineWidth: 3,
+            color: 'rgba(56, 189, 248, 0.85)',
+            lineWidth: 2.5,
           })
           window.drawLandmarks(ctx, landmarks, {
-            color: '#3b82f6',
-            fillColor: 'rgba(34,211,238,0.9)',
-            lineWidth: 1,
-            radius: 5,
+            color: '#13151F',
+            fillColor: '#FFFFFF',
+            lineWidth: 1.5,
+            radius: 4,
           })
           ctx.restore()
         }
       }
 
-      // Send first hand to backend
-      const lms = results.multiHandLandmarks[0].map(l => [l.x, l.y, l.z])
-      try {
-        const res = await axios.post(API_URL, { landmarks: lms })
-        if (res.data?.gesture) onPrediction(res.data)
-      } catch (_) {}
+      // Send first hand to backend with throttling (max 1 request per 150ms)
+      if (!isProcessingRef.current && (now - lastRequestTimeRef.current >= 150)) {
+        isProcessingRef.current = true
+        lastRequestTimeRef.current = now
+
+        const lms = results.multiHandLandmarks[0].map(l => [l.x, l.y, l.z])
+        axios.post(API_URL, { landmarks: lms })
+          .then(res => {
+            if (res.data?.gesture) onPrediction(res.data)
+          })
+          .catch(() => {})
+          .finally(() => {
+            isProcessingRef.current = false
+          })
+      }
     }
 
     // FPS
     framesRef.current++
-    const now = performance.now()
     if (now - lastTimeRef.current >= 1000) {
       setFps(framesRef.current)
       framesRef.current = 0
@@ -114,7 +126,7 @@ export default function WebcamCapture({ onPrediction, isRunning }) {
   }, [isRunning, ready])
 
   return (
-    <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black border border-white/10 shadow-2xl">
+    <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-[#13151F] border border-white/10 shadow-2xl">
       {/* Scan line overlay */}
       {isRunning && <div className="scan-line" />}
 
@@ -123,35 +135,37 @@ export default function WebcamCapture({ onPrediction, isRunning }) {
 
       {/* Idle state */}
       {!isRunning && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#030712]/95">
-          <div className="text-6xl mb-4 animate-bounce">🤟</div>
-          <p className="text-gray-400 font-medium">Press <span className="text-cyan-400">Start Detection</span> to begin</p>
-          <p className="text-gray-600 text-sm mt-2">Camera will activate automatically</p>
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#13151F]">
+          <div className="text-6xl mb-4 text-sky-400 animate-pulse">🤟</div>
+          <p className="text-white font-medium">Click <span className="text-sky-400 font-bold underline">Start Detection</span> to launch neural vision</p>
+          <p className="text-slate-400 text-sm mt-2">MediaPipe landmark tracking will activate</p>
         </div>
       )}
 
       {/* Overlay HUD */}
       <div className="absolute top-3 left-3 flex items-center gap-2">
-        <div className={`flex items-center gap-2 glass px-3 py-1.5 rounded-full text-xs font-mono border ${isRunning ? 'border-green-500/30 text-green-400' : 'border-gray-700 text-gray-500'}`}>
-          <span className={`w-2 h-2 rounded-full ${isRunning ? 'bg-green-400 animate-pulse' : 'bg-gray-600'}`} />
+        <div className={`flex items-center gap-2 glass px-3.5 py-1.5 rounded-full text-xs font-mono border ${isRunning ? 'border-emerald-500/40 text-emerald-400 bg-emerald-500/10' : 'border-white/10 text-slate-400 bg-white/5'}`}>
+          <span className={`w-2 h-2 rounded-full ${isRunning ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500'}`} />
           {isRunning ? `LIVE • ${fps} FPS` : 'OFFLINE'}
         </div>
         {handsDetected > 0 && (
-          <div className="glass px-3 py-1.5 rounded-full text-xs font-mono text-cyan-400 border border-cyan-500/30">
-            {handsDetected} hand{handsDetected > 1 ? 's' : ''} detected
+          <div className="glass px-3.5 py-1.5 rounded-full text-xs font-mono text-sky-300 border border-sky-500/30 bg-sky-500/10">
+            {handsDetected} hand{handsDetected > 1 ? 's' : ''} tracked
           </div>
         )}
       </div>
 
-      {/* Corner brackets (aesthetic) */}
+      {/* Corner reticles */}
       {isRunning && (
         <>
-          <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-cyan-400/60 rounded-tr-sm" />
-          <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-cyan-400/60 rounded-bl-sm" />
-          <div className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-cyan-400/60 rounded-br-sm" />
-          <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-cyan-400/60 rounded-tl-sm" />
+          <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-sky-400/70 rounded-tr-sm" />
+          <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-sky-400/70 rounded-bl-sm" />
+          <div className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-sky-400/70 rounded-br-sm" />
+          <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-sky-400/70 rounded-tl-sm" />
         </>
       )}
     </div>
   )
 }
+
+

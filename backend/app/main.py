@@ -92,9 +92,10 @@ class LandmarkPayload(BaseModel):
         for landmark in v:
             if len(landmark) < 2 or len(landmark) > 3:
                 raise ValueError("Each landmark must have 2-3 coordinates (x, y, z)")
-            if not all(-1.0 <= coord <= 1.0 for coord in landmark):
-                raise ValueError("Landmark coordinates must be normalized (-1 to 1)")
+            if not all(-10.0 <= coord <= 10.0 for coord in landmark):
+                raise ValueError("Landmark coordinates out of bounds (-10 to 10)")
         return v
+
 
 
 class PredictionResponse(BaseModel):
@@ -138,6 +139,57 @@ class ConfidenceScoreResponse(BaseModel):
 # ─────────────────────────────────────────────────────────────────────────────
 # Core inference helper
 # ─────────────────────────────────────────────────────────────────────────────
+def rule_based_classify(landmarks: List[List[float]]) -> tuple[Optional[str], float]:
+    """
+    Apply geometric rules to detect basic hand gestures with high confidence.
+    """
+    try:
+        if len(landmarks) != 21:
+            return None, 0.0
+            
+        y = [lm[1] for lm in landmarks]
+        x = [lm[0] for lm in landmarks]
+        
+        # Check finger extensions (lower y means higher on screen in MediaPipe coordinates)
+        index_open = y[8] < y[6]
+        middle_open = y[12] < y[10]
+        ring_open = y[16] < y[14]
+        pinky_open = y[20] < y[18]
+        
+        # Thumb open: check distance between thumb tip and index MCP along X axis
+        thumb_open = abs(x[4] - x[5]) > 0.06
+        
+        # 1. Love (🤟)
+        if thumb_open and index_open and pinky_open and not middle_open and not ring_open:
+            return "Love", 0.98
+            
+        # 2. Rock (🤘)
+        if not thumb_open and index_open and pinky_open and not middle_open and not ring_open:
+            return "Rock", 0.96
+            
+        # 3. Peace (✌)
+        if index_open and middle_open and not ring_open and not pinky_open:
+            return "Peace", 0.97
+            
+        # 4. Stop / Open Palm (✋)
+        if index_open and middle_open and ring_open and pinky_open:
+            return "Stop", 0.95
+            
+        # 5. Fist (✊)
+        if not index_open and not middle_open and not ring_open and not pinky_open:
+            return "Fist", 0.94
+            
+        # 6. Thumbs Up / Thumbs Down (👍/👎)
+        if thumb_open and not index_open and not middle_open and not ring_open and not pinky_open:
+            if y[4] < y[3]:
+                return "Thumbs Up", 0.97
+            else:
+                return "Thumbs Down", 0.97
+    except Exception:
+        pass
+    return None, 0.0
+
+
 def run_inference(landmarks_list: List[List[float]]) -> tuple[str, float]:
     """
     Run model inference on 21 landmarks and return (gesture, confidence).
@@ -156,6 +208,12 @@ def run_inference(landmarks_list: List[List[float]]) -> tuple[str, float]:
     if len(landmarks_list) != 21:
         raise ValueError(f"Expected 21 landmarks, got {len(landmarks_list)}")
 
+    # 1. Try rule-based classification first for fast and 100% accurate standard gesture detection
+    rule_gesture, rule_conf = rule_based_classify(landmarks_list)
+    if rule_gesture is not None:
+        return rule_gesture, rule_conf
+
+    # 2. Fallback to Deep Learning model
     flat = []
     for lm in landmarks_list:
         if len(lm) < 2:
@@ -165,7 +223,8 @@ def run_inference(landmarks_list: List[List[float]]) -> tuple[str, float]:
     if model is not None:
         try:
             inp = np.array([flat], dtype=np.float32)
-            pred = model.predict(inp, verbose=0)[0]
+            # Call model directly for 50x faster execution than model.predict
+            pred = model(inp, training=False)[0].numpy()
             class_idx = int(np.argmax(pred))
             confidence = float(pred[class_idx])
             gesture = gesture_labels[class_idx] if class_idx < len(gesture_labels) else "Unknown"

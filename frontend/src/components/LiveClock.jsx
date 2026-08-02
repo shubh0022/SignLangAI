@@ -15,9 +15,11 @@ export default function LiveClock() {
   })
 
   return (
-    <div className="flex items-center gap-2 glass px-3 py-1.5 rounded-full text-xs font-mono font-semibold border border-white/5 transition-all text-cyan-500 dark:text-cyan-400">
-      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+    <div className="flex items-center gap-2 glass px-3.5 py-1.5 rounded-full text-xs font-mono font-medium border border-white/10 text-slate-300 bg-white/5 shadow-sm">
+      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
       {formattedTime}
     </div>
   )
 }
+
+

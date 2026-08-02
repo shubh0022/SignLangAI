@@ -1,9 +1,6 @@
 import React from 'react'
 
 export default function Logo({ size = 32, showText = true, className = '' }) {
-  // We compute dimensions based on size.
-  // Standard aspect ratio for full logo is 320:80 = 4:1.
-  // Standard aspect ratio for icon only is 80:80 = 1:1.
   const width = showText ? size * 4 : size
   const height = size
 
@@ -18,36 +15,31 @@ export default function Logo({ size = 32, showText = true, className = '' }) {
         className="overflow-visible"
       >
         <defs>
-          {/* Main Gradient for Hand and Text Brand Mark */}
+          {/* 2026 Modern Brand Gradient */}
           <linearGradient id="brand-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#22d3ee" /> {/* Cyan */}
-            <stop offset="50%" stopColor="#3b82f6" /> {/* Blue */}
-            <stop offset="100%" stopColor="#8b5cf6" /> {/* Purple */}
+            <stop offset="0%" stopColor="#38BDF8" />
+            <stop offset="100%" stopColor="#6366F1" />
           </linearGradient>
 
-          {/* Autofocus Brackets Gradient */}
+          {/* Bracket Gradient */}
           <linearGradient id="bracket-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#6366f1" /> {/* Indigo */}
-            <stop offset="100%" stopColor="#a855f7" /> {/* Purple */}
+            <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#6366F1" stopOpacity="0.5" />
           </linearGradient>
 
-          {/* Mask to cut out the 4-point star/diamond negative space in the hand gesture */}
+          {/* Mask to cut out 4-point diamond space */}
           <mask id="hand-star-mask">
-            {/* White background: keep everything */}
             <rect x="0" y="0" width="80" height="80" fill="#ffffff" />
-            {/* Black star: cut out the star shape at the center of the gesture loop (58, 52) */}
             <path
               d="M 58,45 C 58,52 58,52 51,52 C 58,52 58,52 58,59 C 58,52 58,52 65,52 C 58,52 58,52 58,45 Z"
-              fill="#000000"
+              fill="#0C0D12"
             />
           </mask>
         </defs>
 
-        {/* ========================================================= */}
-        {/* ICON COMPONENT (Left Profile Head + Brackets + Hand)      */}
-        {/* ========================================================= */}
+        {/* ICON COMPONENT */}
         <g id="logo-icon">
-          {/* Tech Profile Face Outline (Facing Right) */}
+          {/* Tech Profile Face Outline */}
           <path
             d="M 14,24 
                C 21,24 23,28 22,33 
@@ -57,50 +49,31 @@ export default function Logo({ size = 32, showText = true, className = '' }) {
                C 24,48.5 23.5,50 22,50.5 
                C 23,52 23,54.5 21,56 
                C 17.5,58.5 15,61 15,66"
-            stroke="currentColor"
+            stroke="#38BDF8"
+            strokeOpacity="0.4"
             strokeWidth="1.5"
             strokeLinecap="round"
-            className="text-slate-400/40 dark:text-slate-500/40"
           />
 
-          {/* Brain Circuit Connections inside Head */}
-          <path
-            d="M 8,28 H 15 L 18,31"
-            stroke="currentColor"
-            strokeWidth="1.2"
-            className="text-slate-400/25 dark:text-slate-500/25"
-          />
-          <circle cx="18" cy="31" r="1.2" fill="currentColor" className="text-slate-400/40 dark:text-slate-500/40" />
+          {/* Brain Circuit Connections */}
+          <path d="M 8,28 H 15 L 18,31" stroke="#38BDF8" strokeOpacity="0.3" strokeWidth="1.2" />
+          <circle cx="18" cy="31" r="1.2" fill="#38BDF8" fillOpacity="0.5" />
 
-          <path
-            d="M 6,39 H 14 L 17,42"
-            stroke="currentColor"
-            strokeWidth="1.2"
-            className="text-slate-400/25 dark:text-slate-500/25"
-          />
-          <circle cx="17" cy="42" r="1.2" fill="currentColor" className="text-slate-400/40 dark:text-slate-500/40" />
+          <path d="M 6,39 H 14 L 17,42" stroke="#38BDF8" strokeOpacity="0.3" strokeWidth="1.2" />
+          <circle cx="17" cy="42" r="1.2" fill="#38BDF8" fillOpacity="0.5" />
 
-          <path
-            d="M 7,50 H 13 L 15,48"
-            stroke="currentColor"
-            strokeWidth="1.2"
-            className="text-slate-400/25 dark:text-slate-500/25"
-          />
-          <circle cx="15" cy="48" r="1.2" fill="currentColor" className="text-slate-400/40 dark:text-slate-500/40" />
+          <path d="M 7,50 H 13 L 15,48" stroke="#38BDF8" strokeOpacity="0.3" strokeWidth="1.2" />
+          <circle cx="15" cy="48" r="1.2" fill="#38BDF8" fillOpacity="0.5" />
 
           {/* Camera Autofocus Brackets [ ] */}
-          <g stroke="url(#bracket-grad)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.9">
-            {/* Top-Left Bracket */}
+          <g stroke="url(#bracket-grad)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M 36,33 V 24 H 45" />
-            {/* Bottom-Left Bracket */}
             <path d="M 36,51 V 60 H 45" />
-            {/* Top-Right Bracket */}
             <path d="M 72,33 V 24 H 63" />
-            {/* Bottom-Right Bracket */}
             <path d="M 72,51 V 60 H 63" />
           </g>
 
-          {/* OK Hand Gesture with Star/Diamond Negative Space Cutout */}
+          {/* Hand Gesture */}
           <path
             d="M 43,65 
                C 42,60 41,51 41,47 
@@ -125,12 +98,9 @@ export default function Logo({ size = 32, showText = true, className = '' }) {
           />
         </g>
 
-        {/* ========================================================= */}
-        {/* TEXT BRANDING COMPONENT ("SignLangAI" + Wavy Line)        */}
-        {/* ========================================================= */}
+        {/* TEXT BRANDING COMPONENT */}
         {showText && (
           <g id="logo-text">
-            {/* Typography */}
             <text
               x="84"
               y="47"
@@ -139,11 +109,11 @@ export default function Logo({ size = 32, showText = true, className = '' }) {
               fontWeight="700"
               letterSpacing="-0.03em"
             >
-              <tspan fill="currentColor" className="text-slate-800 dark:text-white">SignLang</tspan>
+              <tspan fill="#FFFFFF">SignLang</tspan>
               <tspan fill="url(#brand-grad)" fontWeight="900">AI</tspan>
             </text>
 
-            {/* Glowing Double-Helix / Signal Waves under Text */}
+            {/* Signal Waves */}
             <path
               d="M 85,58 Q 110,50 135,58 T 185,58 T 235,58 T 285,58"
               fill="none"
@@ -151,7 +121,7 @@ export default function Logo({ size = 32, showText = true, className = '' }) {
               strokeWidth="1.5"
               strokeDasharray="1 6"
               strokeLinecap="round"
-              opacity="0.8"
+              opacity="0.7"
             />
             <path
               d="M 95,62 Q 120,70 145,62 T 195,62 T 245,62 T 295,62"
@@ -160,7 +130,7 @@ export default function Logo({ size = 32, showText = true, className = '' }) {
               strokeWidth="1"
               strokeDasharray="1 8"
               strokeLinecap="round"
-              opacity="0.45"
+              opacity="0.3"
             />
           </g>
         )}
@@ -168,3 +138,5 @@ export default function Logo({ size = 32, showText = true, className = '' }) {
     </div>
   )
 }
+
+
